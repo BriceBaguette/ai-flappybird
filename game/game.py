@@ -15,10 +15,15 @@ class FlappyBird:
         self.score = 0
         self.game_over = False
         self.background = pg.image.load("assets/images/background-day.png").convert()
+        self.isStarted = False
 
     def jump(self):
         """Make the bird jump."""
         self.bird.jump()
+    
+    def start(self):
+        """Start the game"""
+        self.isStarted = True
 
     def update(self, screen_width: int, screen_height: int):
         """Run the game loop."""

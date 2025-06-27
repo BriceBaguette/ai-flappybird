@@ -2,6 +2,7 @@ import sys
 import pygame as pg
 from game import FlappyBird
 from dataset_creator import DatasetCreator
+import time
 
 def main():
     """Main function to run the Flappy Bird game."""
@@ -12,18 +13,20 @@ def main():
     game = FlappyBird()
     dataset_creator = DatasetCreator("flappy_bird_dataset") 
     create_dataset = "-c" in sys.argv
-
     running = True
     while running:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
                 running = False
-            elif event.type == pg.KEYDOWN:
+            elif event.type == pg.KEYDOWN :
                 if event.key == pg.K_SPACE:
-                    game.jump()
-
-        game.update(screen_width=screen.get_width(), screen_height=screen.get_height())
+                    if game.isStarted:
+                        game.jump()
+                    else:
+                        game.start()
+        if game.isStarted:
+            game.update(screen_width=screen.get_width(), screen_height=screen.get_height())
         game.draw(screen)
         
         pg.display.update()

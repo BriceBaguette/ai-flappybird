@@ -17,12 +17,15 @@ class Bird():
 
     def update(self, screen_height: int):
         
-        if self.y + self.height < screen_height or  self.velocity < 0:
+        if self.y + self.height < screen_height or self.velocity < 0:
             self.velocity += self.gravity
             if self.y + self.height + self.velocity >= screen_height:
                 self.velocity = 0
                 self.y = screen_height - self.height
             self.y += self.velocity
+        if self.y <= 0:
+            self.y = 0
+            self.velocity = 0
 
     def draw(self, screen: pg.Surface):
         screen.blit(self.image, (self.x, self.y))

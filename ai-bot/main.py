@@ -1,55 +1,73 @@
-import subprocess
+import pygetwindow as gw
 import mss
-import numpy as np
 import cv2
+import numpy as np
 import time
+from object_detector import ObjectDetector  # Assure-toi que ce fichier est bien importable
 
-WINDOW_TITLE = "Flappy Bird"  # Change this
+WINDOW_TITLE = "Flappy Bird"  # Titre exact de la fenêtre
 
-def get_window_geometry(window_title):
-    # Get window id using xdotool
-    try:
-        win_id = subprocess.check_output(["xdotool", "search", "--name", window_title]).decode().strip().split("\n")[0]
-    except subprocess.CalledProcessError:
-        return None
+def find_window(title) -> gw.Window: 
+    windows = gw.getWindowsWithTitle(title)
+    return windows[0] if windows else None
 
-    # Get window info using xwininfo
-    win_info = subprocess.check_output(["xwininfo", "-id", win_id]).decode()
+def capture_window(win: gw.Window, sct):
+    # Récupérer les dimensions de la fenêtre
+    left, top, width, height = win.left, win.top, win.width, win.height
+    bbox = {"top": top, "left": left, "width": width, "height": height}
 
-    # Parse position and size
-    x = int([line for line in win_info.splitlines() if "Absolute upper-left X" in line][0].split()[-1])
-    y = int([line for line in win_info.splitlines() if "Absolute upper-left Y" in line][0].split()[-1])
-    width = int([line for line in win_info.splitlines() if "Width:" in line][0].split()[-1])
-    height = int([line for line in win_info.splitlines() if "Height:" in line][0].split()[-1])
-
-    return {"top": y, "left": x, "width": width, "height": height}
-
-def capture_window(region):
-    with mss.mss() as sct:
-        img = np.array(sct.grab(region))
-        img = cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)
-        return img
+    # Capture de l'écran
+    screenshot = sct.grab(bbox)
+    img = np.array(screenshot)
+    img = cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)
+    cv2.imwrite("debug_frame.png", img)
+    
+    return img
 
 def main():
     print(f"Waiting for window titled: '{WINDOW_TITLE}'")
-    region = None
-    while region is None:
-        region = get_window_geometry(WINDOW_TITLE)
-        time.sleep(1)
+    win = None
+
+    # Attente que la fenêtre soit ouverte
+    while win is None:
+        win = find_window(WINDOW_TITLE)
 
     print("Window detected.")
-    while True:
-        region = get_window_geometry(WINDOW_TITLE)
-        if region is None:
-            print("Window closed. Exiting.")
-            break
+    win.activate()
 
-        frame = capture_window(region)
-        cv2.imshow("Capture", frame)
-        if cv2.waitKey(1) == ord('q'):
-            break
+    object_detector = ObjectDetector("yolo_model.pt")
 
-    cv2.destroyAllWindows()
+    with mss.mss() as sct:
+        # Capture initiale pour initialiser le writer vidéo
+        init_frame = capture_window(win, sct)
+        cv2.imshow("Live Capture", cv2.imread("debug_frame.png"))
+        out = object_detector.allocate_video(init_frame, "output_detector.mp4")
+        try:
+            while True:
+                win = find_window(WINDOW_TITLE)
+                if win is None:
+                    print("Window closed. Exiting.")
+                    break
+
+                if win.isMinimized:
+                    print("Window is minimized. Skipping frame.")
+                    time.sleep(0.5)
+                    continue
+
+                frame = capture_window(win, sct)
+                # Traitement et enregistrement
+                out_frame = object_detector.make_video(frame, out)
+
+                # Affichage live (optionnel)
+                cv2.imshow("Live Capture", out_frame)
+                if cv2.waitKey(1) == ord('q'):
+                    print("User quit with 'q'.")
+                    break
+
+        finally:
+            object_detector.release_video(out)
+            cv2.destroyAllWindows()
+            print("Video released and windows closed.")
 
 if __name__ == "__main__":
     main()
