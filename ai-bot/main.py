@@ -20,7 +20,6 @@ def capture_window(win: gw.Window, sct):
     screenshot = sct.grab(bbox)
     img = np.array(screenshot)
     img = cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)
-    cv2.imwrite("debug_frame.png", img)
     
     return img
 
