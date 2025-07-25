@@ -3,9 +3,10 @@ import mss
 import cv2
 import numpy as np
 import time
-from object_detector import ObjectDetector  # Assure-toi que ce fichier est bien importable
+from object_detector import ObjectDetector 
 
-WINDOW_TITLE = "Flappy Bird"  # Titre exact de la fenêtre
+WINDOW_TITLE = "Flappy Bird"
+DETECT_FRAME = 3
 
 def find_window(title) -> gw.Window: 
     windows = gw.getWindowsWithTitle(title)
@@ -26,6 +27,7 @@ def capture_window(win: gw.Window, sct):
 def main():
     print(f"Waiting for window titled: '{WINDOW_TITLE}'")
     win = None
+    frame_count = 0
 
     # Attente que la fenêtre soit ouverte
     while win is None:
@@ -39,8 +41,7 @@ def main():
     with mss.mss() as sct:
         # Capture initiale pour initialiser le writer vidéo
         init_frame = capture_window(win, sct)
-        cv2.imshow("Live Capture", cv2.imread("debug_frame.png"))
-        out = object_detector.allocate_video(init_frame, "output_detector.mp4")
+        out = object_detector.allocate_video(init_frame, "output_detect.mp4")
         try:
             while True:
                 win = find_window(WINDOW_TITLE)
@@ -54,14 +55,28 @@ def main():
                     continue
 
                 frame = capture_window(win, sct)
+                
+                #Object tracking
+                start_time = time.time()
+                if frame_count == 0:
+                    object_detector.detect_objects(frame)
+                    #frame_count = DETECT_FRAME
+                #else:
+                #    object_detector.track_objects(frame)
+                #    frame_count -= 1
+                    
+                fps = 1/(time.time() - start_time)    
                 # Traitement et enregistrement
-                out_frame = object_detector.make_video(frame, out)
+                
+                out_frame = object_detector.make_video(frame, out, fps)
 
                 # Affichage live (optionnel)
                 cv2.imshow("Live Capture", out_frame)
                 if cv2.waitKey(1) == ord('q'):
                     print("User quit with 'q'.")
                     break
+                if fps > 20:
+                    time.sleep(1/20 - 1/fps)
 
         finally:
             object_detector.release_video(out)
