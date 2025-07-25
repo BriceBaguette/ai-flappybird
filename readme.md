@@ -17,8 +17,8 @@ The object detector is capturing the window of the game in LINUX env, therefore 
 When combining detector with tracker to optimize the speed of inference, we never conclude to good results since the tracking is extremely unaccurate on the bird, since it is a small object moving fast.
 When combining detector with tracker to optimize inference speed, we observed poor tracking performance on the bird. The object is small and moves fast, making accurate tracking difficult.
 
-[🎥 Tracking + Detection Result (MP4)](./ai-bot/output_track_detect.mp4)
+[🎥 Tracking + Detection Result (MP4)](https://youtube.com/shorts/AXUniph27dM)
 
 As a result, we reduced the capture rate to 20 FPS (1 frame every 3 from our 60 FPS game) to maintain better accuracy.
 
-[🎥 Detection Only Result (MP4)](./ai-bot/output_detect.mp4)
+[🎥 Detection Only Result (MP4)](https://youtube.com/shorts/6ywJ87_Ch_0)
