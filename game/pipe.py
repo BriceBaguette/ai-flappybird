@@ -1,7 +1,7 @@
 import pygame as pg
 
 class Pipe:
-    def __init__(self, x: int, width: int, height: int, speed: int = 3, gap: int = 175):
+    def __init__(self, x: int, width: int, height: int, speed: int = 5, gap: int = 200):
         """Initialize the pipe with position and size."""
         self.x = x
         self.speed = speed

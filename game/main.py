@@ -31,7 +31,7 @@ def main():
         
         pg.display.update()
         
-        clock.tick(30)
+        clock.tick(60)
         if create_dataset:
             # Save dataset for YOLO format
             bird_position = (game.bird.x, game.bird.y)

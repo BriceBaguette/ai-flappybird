@@ -9,8 +9,9 @@ The object detector is capturing the window of the game in WINDOWS env, since it
 - Train yolo :white_check_mark:
 - Window capture by external program and object detector :white_check_mark:
 - Tracker and paralelize the detection to optimize real-time app :x:
-- Build InApp RL model 🔲
-- Use this architecture in external app combine with computer vision 🔲
+- Build InApp RL model :white_check_marck:
+- Use this architecture in external app combine with computer vision :white_check_mark:
+- Speed up game tick speed and make game harder to see limitations 🔲
 
 # Results
 
