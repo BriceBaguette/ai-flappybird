@@ -1,6 +1,6 @@
 # Requirements
 
-The object detector is capturing the window of the game in LINUX env, therefore changement need to be done with pygetwindow in windows
+The object detector is capturing the window of the game in WINDOWS env, since it's not available in LINUX to capture the screen easily. Since that's not part of the project to implement a windows recorder in LINUX, I rather pursue the development in WINDOWS.
 
 # Progress step
 

@@ -8,7 +8,7 @@ class Bird():
         self.height = height
         self.gravity = 0.5
         self.velocity = 0
-        self.jump_strength = -10
+        self.jump_strength = -6
         self.sprite_path =  "assets/images/bird.png"
         self.image = pg.transform.scale(pg.image.load(self.sprite_path).convert_alpha(), (self.width, self.height))
 
