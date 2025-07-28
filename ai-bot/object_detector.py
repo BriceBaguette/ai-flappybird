@@ -55,7 +55,7 @@ class ObjectDetector:
 
         pipes = self.get_closest_pipes()
         if len(pipes) < 2:
-            return [self.bird_bbox[1], 0, 0, 0, 0]
+            return [self.bird_bbox[1], 0, 0, 0]
         if pipes[0][1] > pipes[1][1]:
             pipes.reverse()
             

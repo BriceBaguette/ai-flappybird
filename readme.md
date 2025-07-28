@@ -23,3 +23,7 @@ When combining detector with tracker to optimize inference speed, we observed po
 As a result, we reduced the capture rate to 20 FPS (1 frame every 3 from our 60 FPS game) to maintain better accuracy.
 
 [🎥 Detection Only Result (MP4)](https://youtube.com/shorts/6ywJ87_Ch_0)
+
+When using NEAT which is a genetic algorithm to learn to play with CV, we achieve a score of 100 after 6 generations.
+
+![🎥 Final Result](NEAT_BEST_CV.gif)
