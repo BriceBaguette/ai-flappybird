@@ -1,29 +1,49 @@
-# Requirements
+# Flappy Bird AI with Computer Vision
 
-The object detector is capturing the window of the game in WINDOWS env, since it's not available in LINUX to capture the screen easily. Since that's not part of the project to implement a windows recorder in LINUX, I rather pursue the development in WINDOWS.
+## 🛠 Requirements
 
-# Progress step
+This project captures and processes the **Flappy Bird game window on Windows** using an object detection pipeline.  
+Due to the lack of easy screen capture tools on Linux and since developing a custom recorder is out of scope, **all development is done on Windows**.
 
-- Build flappy bird game in python :white_check_mark:
-- Generate dataset by playing the game :white_check_mark:
-- Train yolo :white_check_mark:
-- Window capture by external program and object detector :white_check_mark:
-- Tracker and paralelize the detection to optimize real-time app :white_check_mark:
-- Build InApp RL model for comparaisons 🔲
-- Use this architecture in external app combine with computer vision :white_check_mark:
-- Speed up game tick speed and make game harder to see limitations 🔲
+## 🚧 Project Progress
 
-# Results
+- ✅ Build Flappy Bird clone in Python
+- ✅ Generate a dataset by playing the game
+- ✅ Train a YOLO-based object detector
+- ✅ Capture game window using an external process and apply object detection
+- ✅ Add object tracking and parallelize detection for better real-time performance
+- 🔲 Build an in-app Reinforcement Learning (RL) model for comparison
+- ✅ Integrate vision model with an external control agent
+- 🔲 Increase game speed to test model limits under more difficult conditions
 
-When combining detector with tracker to optimize the speed of inference, we never conclude to good results since the tracking is extremely unaccurate on the bird, since it is a small object moving fast.
-When combining detector with tracker to optimize inference speed, we observed poor tracking performance on the bird. The object is small and moves fast, making accurate tracking difficult.
+---
 
-[🎥 Tracking + Detection Result (MP4)](https://youtube.com/shorts/AXUniph27dM)
+## 📈 Results
 
-As a result, we reduced the capture rate to 20 FPS (1 frame every 3 from our 60 FPS game) to maintain better accuracy.
+### 🎯 Object Detection Only
 
-[🎥 Detection Only Result (MP4)](https://youtube.com/shorts/6ywJ87_Ch_0)
+The system captures the game window in real-time and detects the bird and pipes using a YOLOv5 model.  
+Detection is handled in a separate process to allow smooth inference and gameplay monitoring.
 
-When using NEAT which is a genetic algorithm to learn to play with CV, we achieve a score of 100 after 6 generations.
+▶️ [Watch detection-only demo (YouTube Short)](https://youtube.com/shorts/6ywJ87_Ch_0)
 
-<img src="NEAT_BEST_CV.gif" alt="Final Result" width="288">
+---
+
+### 🧠 Detection + Tracking
+
+To speed up inference, tracking was added to reduce the need for continuous detection. However, results showed that **tracking failed on the bird**, due to its small size and rapid movement.
+
+▶️ [Watch detection + tracking demo (YouTube Short)](https://youtube.com/shorts/AXUniph27dM)
+
+**Conclusion:** Tracking was too inaccurate. For training the AI agent, we rely only on detection, which runs at ~25–30 FPS, while the game runs at 60 FPS.
+
+---
+
+### 🤖 Learning to Play with NEAT
+
+We used **NEAT (NeuroEvolution of Augmenting Topologies)**, a genetic algorithm, to evolve a neural network that learns to play the game based on computer vision inputs.
+
+- After **6 generations**, the AI achieved a **score of 100**.
+- The input features are extracted from the object detector and fed to the neural network to decide when to flap.
+
+<img src="NEAT_BEST_CV.gif" alt="Best NEAT Agent Playing" width="288">
