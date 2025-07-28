@@ -6,7 +6,10 @@ import time
 import neat
 import keyboard
 import pyautogui
+import pickle
 from object_detector import ObjectDetector 
+from neat.reporting import StdOutReporter
+from neat.statistics import StatisticsReporter
 
 WINDOW_TITLE = "Flappy Bird"
 DETECT_FRAME = 3
@@ -35,7 +38,15 @@ def main():
                          config_path)
     
     population = neat.Population(config)
-    population.run(eval_genomes, 50)
+    population.add_reporter(StdOutReporter(True))
+    stats = StatisticsReporter()
+    population.add_reporter(stats)
+
+    winner = population.run(eval_genomes, 50)
+
+    # Sauvegarde du genome gagnant
+    with open("winner_genome.pkl", "wb") as f:
+        pickle.dump(winner, f)
 
 def eval_genomes(genomes, config):
     global generation_counter
@@ -48,7 +59,7 @@ def eval_genomes(genomes, config):
 
     print("Window detected.")
     win.activate()
-    win.moveTo(100,100)
+    win.moveTo(900,300)
     if win.isMinimized:
         win.restore()
       
@@ -117,8 +128,6 @@ def run(win, object_detector: ObjectDetector, net: neat.nn.FeedForwardNetwork, g
                 if cv2.waitKey(1) == ord('q'):
                     print("User quit with 'q'.")
                     break
-                if fps > 20:
-                    time.sleep(1/20 - 1/fps)
                 
                 if ready == False:
                     keyboard.press_and_release("r")

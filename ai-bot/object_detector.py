@@ -61,7 +61,6 @@ class ObjectDetector:
             
         features = [self.bird_bbox[1],
                     abs(self.bird_bbox[1] - pipes[0][3]),
-                    abs(self.bird_bbox[3] - pipes[1][1]),
                     abs(self.bird_bbox[0] - pipes[0][0]),
                     self.previous_bird_bbox[1] - self.bird_bbox[1]
                     ]
@@ -89,7 +88,7 @@ class ObjectDetector:
     def allocate_video(self, image: cv.Mat, output_path: str):
         """Allocate a video writer for saving the output video."""
         fourcc = cv.VideoWriter_fourcc(*'mp4v')
-        out = cv.VideoWriter(output_path, fourcc, 20.0, (int(image.shape[1]), int(image.shape[0])))
+        out = cv.VideoWriter(output_path, fourcc, 30.0, (int(image.shape[1]), int(image.shape[0])))
         return out
 
     def make_video(self, image: cv.Mat, out: cv.VideoWriter, fps: float, neat_info: tuple):
