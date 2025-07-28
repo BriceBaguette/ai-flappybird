@@ -26,4 +26,4 @@ As a result, we reduced the capture rate to 20 FPS (1 frame every 3 from our 60 
 
 When using NEAT which is a genetic algorithm to learn to play with CV, we achieve a score of 100 after 6 generations.
 
-![🎥 Final Result](NEAT_BEST_CV.gif)
+<img src="NEAT_BEST_CV.gif" alt="Final Result" width="288">
